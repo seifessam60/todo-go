@@ -57,7 +57,7 @@ func GetTodos(c *gin.Context){
 
 	// Pagination parameters
 	page, _ := strconv.Atoi(c.DefaultQuery("page","1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 
 	if page < 1 {
 		page = 1
@@ -77,10 +77,10 @@ func GetTodos(c *gin.Context){
 		query = query.Where("priority = ?", priority)
 	}
 	if category != "" {
-		query = query.Where("category = ?", category)
+		query = query.Where("category LIKE ?", "%"+category+"%")
 	}
 	if search != "" {
-		query = query.Where("title LIKE ? OR description LIKE ?", "%"+search+"%", "%"+search+"%")
+		query = query.Where("title ILIKE ? OR description ILIKE ?", "%"+search+"%", "%"+search+"%")
 	}
 
 	var total int64
